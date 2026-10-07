@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV Raihan</title>
+
+    <style>
+        /* Variabel & Reset */
+        :root {
+            --text-color: #fff;
+            --overlay-bg: rgba(0, 0, 0, 0.6);
+            --overlay-bg-hover: rgba(0, 0, 0, 0.85);
+            --border: 2px solid #fff;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            color: var(--text-color);
+        }
+
+        /* Konten utama */
+        .content {
+            padding: 50px;
+            text-align: center;
+        }
+
+        .content p {
+            text-align: justify;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Latar belakang video */
+        .bg-video {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            z-index: -1;
+        }
+
+        /* Konten utama */
+        .content {
+            padding: 50px;
+            text-align: center;
+        }
+
+        /* Tombol (gaya bersama) */
+        .login-btn,
+        .music-btn {
+            color: var(--text-color);
+            background: var(--overlay-bg);
+            border: var(--border);
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        .login-btn:hover,
+        .music-btn:hover {
+            background: var(--overlay-bg-hover);
+        }
+
+        /* Tombol masuk */
+        .login-btn {
+            margin-top: 20px;
+            padding: 12px 28px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+        }
+
+        .login-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* Tombol musik */
+        .music-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 55px;
+            height: 55px;
+            font-size: 22px;
+            border-radius: 50%;
+        }
+
+        .music-btn:hover {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+
+<body>
+    <video class="bg-video" autoplay loop muted playsinline>
+        <source src="background.mp4" type="video/mp4">
+    </video>
+
+    <main class="content">
+        <h1>Selamat Datang</h1>
+        <p>
+            Ini adalah halaman web portofolio saya yang berisi informasi tentang
+            diri saya, pengalaman, keterampilan, dan hasil karya yang telah saya buat.
+        </p>
+        <button id="loginBtn" class="login-btn">Masuk untuk melihat profil saya</button>
+    </main>
+
+    <audio id="bgAudio" loop>
+        <source src="audio.mpeg" type="audio/mpeg">
+    </audio>
+
+    <button id="musicBtn" class="music-btn" aria-label="Nyalakan atau matikan musik">🔊</button>
+
+    <script>
+        const audio    = document.getElementById('bgAudio');
+        const musicBtn = document.getElementById('musicBtn');
+        const loginBtn = document.getElementById('loginBtn');
+
+        function updateMusicIcon() {
+            musicBtn.textContent = audio.paused ? '🔇' : '🔊';
+        }
+
+        function toggleMusic() {
+            if (audio.paused) {
+                audio.play().then(updateMusicIcon).catch(updateMusicIcon);
+            } else {
+                audio.pause();
+                updateMusicIcon();
+            }
+        }
+
+        audio.play().then(updateMusicIcon).catch(updateMusicIcon);
+
+        musicBtn.addEventListener('click', toggleMusic);
+        loginBtn.addEventListener('click', () => {
+            window.location.href = 'profil.html';
+        });
+    </script>
+</body>
+</html>
