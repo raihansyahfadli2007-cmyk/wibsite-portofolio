@@ -135,6 +135,12 @@
   input:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:1px}
   textarea{resize:vertical;min-height:110px}
 
+  /* status pengiriman form */
+  .form-status{margin:0;font-size:13px;min-height:1.3em;max-width:none}
+  .form-status.ok{color:#6FCF97}
+  .form-status.err{color:#EB7A7A}
+  button:disabled{opacity:.6;cursor:not-allowed}
+
   footer{border-top:1px solid var(--line);padding:28px 24px;text-align:center;color:var(--muted);font-size:13px}
 
   @media (prefers-reduced-motion: no-preference){
@@ -260,16 +266,56 @@
       <div class="row"><span class="k mono">Telepon</span><span>+62 813-1786-8632</span></div>
       <p style="margin-top:20px">Silakan hubungi untuk peluang kerja, kolaborasi, atau sekadar menyapa.</p>
     </div>
-    <form onsubmit="event.preventDefault()">
-      <input type="text" placeholder="Nama">
-      <input type="email" placeholder="Email">
-      <textarea placeholder="Pesan"></textarea>
-      <button type="submit" class="btn btn-primary" style="align-self:flex-start">Kirim Pesan</button>
+    <form id="form-kontak">
+      <input type="text" name="nama" placeholder="Nama" required>
+      <input type="email" name="email" placeholder="Email" required>
+      <textarea name="pesan" placeholder="Pesan" required></textarea>
+      <button type="submit" id="btn-kirim" class="btn btn-primary" style="align-self:flex-start">Kirim Pesan</button>
+      <p id="form-status" class="form-status" role="status" aria-live="polite"></p>
     </form>
   </div>
 </section>
 
 <footer>© 2026 Raihansyah Fadli. Semua hak dilindungi.</footer>
+
+<!-- Pengiriman email via EmailJS -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+  // ISI 3 NILAI INI dari dashboard emailjs.com
+  const EMAILJS_PUBLIC_KEY  = "wCPAypzxY70HcIJK8";   // Account > General > Public Key
+  const EMAILJS_SERVICE_ID  = "service_Raihan";   // Email Services
+  const EMAILJS_TEMPLATE_ID = "template_l219i3u";  // Email Templates
+
+  emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+
+  const form   = document.getElementById("form-kontak");
+  const btn    = document.getElementById("btn-kirim");
+  const status = document.getElementById("form-status");
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    btn.disabled = true;
+    btn.textContent = "Mengirim...";
+    status.className = "form-status";
+    status.textContent = "";
+
+    emailjs.sendForm(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, form)
+      .then(function () {
+        status.classList.add("ok");
+        status.textContent = "Pesan berhasil terkirim. Terima kasih!";
+        form.reset();
+      })
+      .catch(function () {
+        status.classList.add("err");
+        status.textContent = "Gagal mengirim pesan. Silakan coba lagi.";
+      })
+      .finally(function () {
+        btn.disabled = false;
+        btn.textContent = "Kirim Pesan";
+      });
+  });
+</script>
 
 </body>
 </html>
