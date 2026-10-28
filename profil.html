@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Raihansyah Fadli — Portfolio</title>
+<script>
+  // Terapkan tema tersimpan sebelum halaman tampil (mencegah kedip)
+  try {
+    document.documentElement.setAttribute("data-theme", localStorage.getItem("tema") || "dark");
+  } catch (e) {
+    document.documentElement.setAttribute("data-theme", "dark");
+  }
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -19,14 +27,45 @@
     --accent:#6495ED;
     --accent-dim:#5B92E5;
     --amber:#E8A33D;
+    --header-bg:rgba(14,19,24,.86);
+    --hero-top:rgba(14,19,24,.55);
+    --hero-mid:rgba(14,19,24,.75);
+    --ghost-border:rgba(255,255,255,.35);
     box-sizing:border-box;
     padding-top:env(safe-area-inset-top,0px);
     padding-bottom:env(safe-area-inset-bottom,0px);
   }
 
+  /* Tema terang */
+  :root[data-theme="light"]{
+    --bg:#F6F8FA;
+    --surface:#FFFFFF;
+    --surface-2:#E6EBF0;
+    --line:#D5DCE3;
+    --text:#14202B;
+    --muted:#566574;
+    --accent:#2F6FE0;
+    --accent-dim:#2F6FE0;
+    --amber:#B9770E;
+    --header-bg:rgba(246,248,250,.88);
+    --hero-top:rgba(246,248,250,.6);
+    --hero-mid:rgba(246,248,250,.8);
+    --ghost-border:rgba(20,32,43,.35);
+  }
+
+  body{transition:background-color .3s,color .3s}
+  .theme-btn{
+    display:inline-flex;align-items:center;gap:8px;cursor:pointer;
+    background:var(--surface);color:var(--text);border:1px solid var(--line);
+    border-radius:999px;padding:8px 14px;font:inherit;font-size:13px;
+  }
+  .theme-btn:hover{border-color:var(--accent)}
+  .top-actions{display:flex;align-items:center;gap:22px}
+
   *,*::before,*::after{box-sizing:inherit}
   html{scroll-behavior:smooth;scroll-padding-top:env(safe-area-inset-top,0px)}
-  html,body{height:100%}
+  html{min-height:100%}
+  body{min-height:100%}
   body{
     margin:0;
     background:var(--bg);
@@ -42,7 +81,7 @@
   /* topbar */
   header.top{
     position:sticky;top:env(safe-area-inset-top,0px);z-index:20;
-    background:rgba(14,19,24,.86);backdrop-filter:blur(10px);
+    background:var(--header-bg);backdrop-filter:blur(10px);
     border-bottom:1px solid var(--line);
   }
 
@@ -64,7 +103,12 @@
   p{color:var(--muted);max-width:60ch}
 
   /* hero */
-  .hero-wrap{position:relative;width:100%;overflow:hidden;min-height:560px;display:flex;align-items:center}
+  /* Background hero tetap sama di tema gelap maupun terang */
+  .hero-wrap{
+    position:relative;width:100%;overflow:hidden;min-height:560px;display:flex;align-items:center;
+    --text:#E9EDF0;--muted:#C5CED6;--accent:#6495ED;--ghost-border:rgba(255,255,255,.35);
+    color:var(--text);
+  }
   .hero-wrap video{
     position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;
   }
@@ -85,7 +129,7 @@
   }
 
   .btn-primary{background:var(--accent);color:#08211E}
-  .btn-ghost{border-color:rgba(255,255,255,.35);color:var(--text)}
+  .btn-ghost{border-color:var(--ghost-border);color:var(--text)}
   .btn:hover{opacity:.9}
 
   .status{margin-top:26px;color:var(--muted);font-size:12px;display:flex;align-items:center;gap:8px}
@@ -155,13 +199,16 @@
 <header class="top">
   <div class="top-inner">
     <div class="brand"><span class="dot"></span>Raihansyah Fadli</div>
-    <nav class="links">
-      <a href="#about">Tentang</a>
-      <a href="#resume">Resume</a>
-      <a href="#portfolio">Portfolio</a>
-      <a href="#sertifikat">Sertifikat</a>
-      <a href="#kontak">Kontak</a>
-    </nav>
+    <div class="top-actions">
+      <nav class="links">
+        <a href="#about">Tentang</a>
+        <a href="#resume">Resume</a>
+        <a href="#portfolio">Portfolio</a>
+        <a href="#sertifikat">Sertifikat</a>
+        <a href="#kontak">Kontak</a>
+      </nav>
+      <button type="button" id="themeBtn" class="theme-btn" aria-label="Ganti tema gelap atau terang"></button>
+    </div>
   </div>
 </header>
 
@@ -277,6 +324,24 @@
 </section>
 
 <footer>© 2026 Raihansyah Fadli. Semua hak dilindungi.</footer>
+
+<script>
+  // Ganti tema gelap / terang
+  const themeBtn = document.getElementById("themeBtn");
+
+  function setTema(tema) {
+    document.documentElement.setAttribute("data-theme", tema);
+    themeBtn.textContent = tema === "dark" ? "☀️ Tema Terang" : "🌙 Tema Gelap";
+    try { localStorage.setItem("tema", tema); } catch (e) {}
+  }
+
+  setTema(document.documentElement.getAttribute("data-theme") || "dark");
+
+  themeBtn.addEventListener("click", function () {
+    const sekarang = document.documentElement.getAttribute("data-theme");
+    setTema(sekarang === "dark" ? "light" : "dark");
+  });
+</script>
 
 <!-- Pengiriman email via EmailJS -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
